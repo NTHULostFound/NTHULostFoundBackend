@@ -1,0 +1,46 @@
+{
+  "name": "gql_server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon ./index.js --exec babel-node",
+    "test": "standard --fix && jest --force-exit --detectOpenHandles -u",
+    "cover": "jest --coverage --watchAll=false --force-exit -u",
+    "stan": "standard --fix"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  },
+  "jest": {
+    "verbose": true
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/node": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
+    "jest": "^27.4.5",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^8.3.1",
+    "apollo-boost": "^0.4.9",
+    "apollo-datasource": "^3.3.1",
+    "apollo-datasource-rest": "^3.5.1",
+    "apollo-server": "^3.6.3",
+    "apollo-server-core": "^3.6.4",
+    "apollo-server-express": "^3.6.1",
+    "apollo-server-testing": "^2.25.3",
+    "apollo-server-types": "^3.5.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "graphql": "^16.2.0",
+    "graphql-subscriptions": "^2.0.0",
+    "http": "^0.0.1-security",
+    "mysql2": "^2.3.3",
+    "standard": "^16.0.4",
+    "subscriptions-transport-ws": "^0.11.0"
+  }
+}
