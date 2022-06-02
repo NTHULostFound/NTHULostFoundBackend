@@ -5,6 +5,7 @@ dotenv.config()
 // Server
 const port = process.env.PORT
 const secret = process.env.SECRET
+const JWTSecret = process.env.JWT_SECRET
 const version = process.env.VERSION
 
 // Weathermap API

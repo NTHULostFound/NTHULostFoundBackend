@@ -1,0 +1,11 @@
+
+type UserInfo {
+    fcmToken: String!
+    name: String
+    studentId: String
+    email: String
+}
+
+type AccessToken {
+    token: String
+}

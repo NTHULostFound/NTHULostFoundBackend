@@ -1,0 +1,38 @@
+
+enum ItemType {
+  FOUND
+  LOST
+}
+
+type Item {
+  uuid: String!
+  type: ItemType!
+  name: String!
+  description: String
+  date: DateTime!
+  place: String!
+  how: String!
+  images: [String!]!
+  isMine: Boolean!
+}
+
+type NewItem {
+  type: ItemType!
+  name: String!
+  description: String
+  date: DateTime!
+  place: String!
+  how: String!
+  images: [String!]!
+  contact: String!
+  who: String
+}
+
+type DeletedItemResponse {
+  count: Int!
+}
+
+type ItemContact {
+    contact: String!
+}
+

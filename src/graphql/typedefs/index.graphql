@@ -1,18 +1,16 @@
-# Custom Scalars
-scalar Date
 
 type Query {
   # Version
   version: String!
-
-  # Author
-  authors: [Author]
-  author(userId: ID!): Author
+  getItems(type: ItemType!, search: String, mine: Boolean): [Item]
+  getItem(itemId: String!): Item
+  getItemContact(itemId: String!): ItemContact
 }
 
 type Mutation {
-  # Authors
-  createAuthor(author: AuthorCreateInput!): Author!
-  updateAuthor(userId: ID!, author: AuthorUpdateInput!): Author!
-  deleteAuthor(userId: ID!): String!
+  newItem(item: NewItem): Item
+  endItem(itemId: String!): Item
+
+  registerFCMToken(token: String!): AccessToken
+  updateUserData(name: String, studentId: String, email: String): UserInfo
 }
