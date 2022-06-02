@@ -12,14 +12,8 @@ CREATE TABLE IF NOT EXISTS items (
     "place" TEXT NOT NULL,
     "how" TEXT NOT NULL,
     "contact" TEXT NOT NULL,
+    "images" TEXT NOT NULL,
     "resolved" BOOLEAN NOT NULL DEFAULT FALSE,
-    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS images (
-    "uuid" UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    "itemId" UUID REFERENCES items(uuid) ON DELETE CASCADE NOT NULL,
-    "imageUrl" TEXT NOT NULL,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 

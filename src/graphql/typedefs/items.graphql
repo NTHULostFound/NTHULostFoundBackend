@@ -9,18 +9,19 @@ type Item {
   type: ItemType!
   name: String!
   description: String
-  date: DateTime!
+  date: String!
   place: String!
   how: String!
   images: [String!]!
   isMine: Boolean!
+  resolved: Boolean!
 }
 
 type NewItem {
   type: ItemType!
   name: String!
   description: String
-  date: DateTime!
+  date: String!
   place: String!
   how: String!
   images: [String!]!

@@ -4,7 +4,7 @@ import connectPool from '../../../database'
 const authorQueries = {
   authors: async (_, args) => {
     const users = await AuthorModel.selectAll(connectPool)
-
+    
     return users
   },
   author: async (_, args) => {
