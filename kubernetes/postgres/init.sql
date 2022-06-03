@@ -5,6 +5,7 @@ CREATE TYPE ItemType AS ENUM ('FOUND', 'LOST');
 
 CREATE TABLE IF NOT EXISTS items (
     "uuid" UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    "author" UUID NOT NULL REFERENCES users(uuid),
     "type" ItemType NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,

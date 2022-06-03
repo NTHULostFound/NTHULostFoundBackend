@@ -16,6 +16,19 @@ export default class UserModel {
     }
   }
 
+  static async findUser(who) {
+    try {
+      const queryText = 'SELECT * FROM users WHERE studentId ILIKE $1 OR name ILIKE $1'
+      const userRes = await pool.query(queryText, [who])
+      
+      return userRes
+
+    } catch (e) {
+      console.warn(e)
+      throw Error("Internal Server Error")
+    }
+  }
+
   static async newUser(fcmToken) {
     try {
 
