@@ -1,13 +1,8 @@
 import { db } from '../config/environment'
-const { Pool } = require('pg')
 
-const pool = new Pool({
-  host: db.host,
-  user: db.user,
-  password: db.password,
-  database: db.name,
-  port: db.port
-})
+const pg = require('knex')({
+  client: 'pg',
+  connection: process.env.PG_CONNECTION_STRING
+});
 
-export default pool
-
+export default pg

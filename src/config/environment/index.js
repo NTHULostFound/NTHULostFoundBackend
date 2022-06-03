@@ -22,13 +22,9 @@ const env = {
   production: process.env.NODE_ENV === 'production'
 }
 
-// MySql Database
+// Postgres connection string
 const db = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  name: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  connectionUrl: process.env.PG_CONNECTION_STRING,
 }
 
 export { port, env, secret, db, version, api }

@@ -1,15 +1,14 @@
-import pool from '../database'
+import knex from 'knex'
+import pg from '../database'
 
 /* eslint-disable no-unused-vars */
 export default class UserModel {
 
   static async getUser(userId) {
     try {
-      const queryText = 'SELECT * FROM users WHERE uuid = $1'
-      const userRes = await pool.query(queryText, [userId])
+      const res = await knex("users").where("uuid", userId)
       
-      return userRes
-
+      return res
     } catch (e) {
       console.warn(e)
       throw Error("Internal Server Error")
@@ -18,10 +17,9 @@ export default class UserModel {
 
   static async findUser(who) {
     try {
-      const queryText = 'SELECT * FROM users WHERE studentId ILIKE $1 OR name ILIKE $1'
-      const userRes = await pool.query(queryText, [who])
-      
-      return userRes
+      const res = await knex("users").whereILike("studentId", who).orWhereILike("name", who)
+
+      return res
 
     } catch (e) {
       console.warn(e)
@@ -31,12 +29,11 @@ export default class UserModel {
 
   static async newUser(fcmToken) {
     try {
+      const res = await knex("users").insert({
+        fcmToken: fcmToken,
+      }).returning("*")
 
-      const queryText =
-        'INSERT INTO users(fcmToken) VALUES($1)'
-      const userRes = await pool.query(queryText, [fcmToken])
-
-      return userRes
+      return res
 
     } catch (e) {
       console.warn(e)
@@ -46,14 +43,15 @@ export default class UserModel {
 
   static async updateUser(user) {
     try {
+      const res = await knex("users").update({
+        fcmToken: user.fcmToken,
+        name: user.name,
+        studentId: user.studentId,
+        email: user.email,
+      }).where("uuid", user.uuid)
+        .returning("*")
 
-      const queryText = 'UPDATE items SET \
-        fcmToken = $2, name = $3, studentId = $4, email = $5 \
-        WHERE uuid = $1'
-      const values = [ user.uuid, user.fcmToken, user.name, user.studentId, user.email ]
-      const itemRes = await pool.query(queryText, values)
-
-      return itemRes
+      return res
 
     } catch (e) {
       console.warn(e)

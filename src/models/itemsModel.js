@@ -1,16 +1,94 @@
-import pool from '../database'
+import { UserInputError } from 'apollo-server-express';
+import knex from 'knex'
+import pg from '../database'
 
 /* eslint-disable no-unused-vars */
 export default class ItemsModel {
 
-  static async getItems(showResolved = false) {
+  static async getItems(pagingArgs, showResolved = false, authorId = null, search = null) {
+    const { first, last, after, before } = args;
+
     try {
-      const queryText = showResolved? 
-            'SELECT * FROM items ORDER BY createdAt DESC' :
-            'SELECT * FROM items WHERE resolved = false ORDER BY createdAt DESC'
-      const itemRes = await pool.query(queryText)
+
+      if (!first && !last)
+        throw UserInputError("Paging arguments must have either 'first' or 'last'")
+
+      if (first && last)
+        throw UserInputError("Paging arguments should not have both 'first' and 'last'")
+
+      if (after && before)
+        throw UserInputError("Paging arguments should not have both 'after' and 'before'")
+
+      let items;
+      let hasNextPage;
+      let hasPreviousPage;
+
+      const builder = knex("items").select("*")
+
+      if (!showResolved)
+        builder.where("resolved", false)
+
+      if (authorId)
+        builder.where("author", authorId)      
+
+      if (search)
+        builder.where((bd) => {
+          bd.orWhereRaw("?? ILIKE '%' || ? || '%'", ['name', search])
+            .orWhereRaw("?? ILIKE '%' || ? || '%'", ['description', search])
+            .orWhereRaw("?? ILIKE '%' || ? || '%'", ['place', search])
+        });
       
-      return itemRes
+      if (first && !after && !before) {
+        const data = await builder
+          .orderBy("createdAt", "DESC")
+          .limit(first + 1);
+
+        hasPreviousPage = false;
+        hasNextPage = data.length > first;
+        items = hasNextPage ? data.slice(0, -1) : data;
+      } else if (first && after) {
+        const data = await builder
+          .where('createdAt', '<', decodeCursor(after))
+          .orderBy("createdAt", "DESC")
+          .limit(first + 1);
+
+        hasPreviousPage = true;
+        hasNextPage = data.length > first;
+        items = hasNextPage ? data.slice(0, -1) : data;
+      } else if (last && !before && !after) {
+        const subQuery = builder
+          .orderBy('createdAt', 'ASC')
+          .limit(last + 1);
+
+        const data = await knex
+          .from(knex.raw(`(${subQuery}) AS items`))
+          .orderBy('items.createdAt', 'DESC');
+
+        hasNextPage = false;
+        hasPreviousPage = data.length > last;
+        items = hasPreviousPage ? data.slice(1) : data;
+      } else if (last && before) {
+        const subQuery = builder
+          .where('createdAt', '>', decodeCursor(before))
+          .orderBy('createdAt', 'ASC')
+          .limit(last + 1);
+
+        const data = await knex
+          .from(knex.raw(`(${subQuery}) AS items`))
+          .orderBy('items.createdAt', 'DESC');
+
+        hasNextPage = true;
+        hasPreviousPage = data.length > last;
+        items = hasPreviousPage ? data.slice(1) : data;
+      }
+
+      return {
+        edges: items,
+        pageInfo: {
+          hasNextPage,
+          hasPreviousPage
+        }
+      };
 
     } catch (e) {
       console.warn(e)
@@ -23,7 +101,8 @@ export default class ItemsModel {
       const queryText = 'SELECT * FROM items WHERE uuid = $1'
       const itemRes = await pool.query(queryText, [itemId])
       
-      return itemRes
+      const res = knex('items').select('*').where('uuid', itemId).first()
+      return res
 
     } catch (e) {
       console.warn(e)
@@ -34,15 +113,18 @@ export default class ItemsModel {
   static async newItem(item) {
     try {
 
-      const queryText =
-        'INSERT INTO items(type, name, description, date, place, how, contact, images) \
-          VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id'
-      const values = [
-        item.type, item.name, item.description, item.date, item.place, item.how, item.contact, item.images_txt
-      ]
-      const itemRes = await pool.query(queryText, values)
+      const res = knex('items').insert({
+        type: item.type,
+        name: item.name,
+        description: item.description,
+        date: item.date,
+        place: item.place,
+        how: item.how,
+        contact: item.contact,
+        images: item.images_txt
+      }).returning('*').first()
 
-      return itemRes
+      return res
 
     } catch (e) {
       console.warn(e)
@@ -52,11 +134,11 @@ export default class ItemsModel {
 
   static async setResolved(itemId) {
     try {
+      const res = knex('items').update({
+        resolved: true
+      }).where('uuid', itemId).returning('*').first()
 
-      const queryText = 'UPDATE items SET resolved = true WHERE uuid = $1'
-      const itemRes = await pool.query(queryText, [itemId])
-
-      return itemRes
+      return res
 
     } catch (e) {
       console.warn(e)
