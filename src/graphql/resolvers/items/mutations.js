@@ -30,14 +30,14 @@ const itemMutations = {
     const { itemId } = args
     const item = await ItemsModel.getItem(itemId)
 
-    if (item.length === 0) { throw new UserInputError('Item not found.') }
+    if (item == null) { throw new UserInputError('Item not found.') }
 
     if (item.author !== userId) { throw new AuthenticationError('You are not the author of this item.') }
 
     const endedItem = await ItemsModel.setResolved(itemId)
 
-    endedItem.isMine = item.author === userId
-    item.images = item.images === '' ? [] : item.images.split(',')
+    endedItem.isMine = endedItem.author === userId
+    endedItem.images = endedItem.images === '' ? [] : endedItem.images.split(',')
 
     delete endedItem.author
     delete endedItem.contact

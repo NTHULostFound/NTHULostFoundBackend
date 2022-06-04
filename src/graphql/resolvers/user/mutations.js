@@ -7,9 +7,9 @@ const userMutations = {
     const { token } = args
     let userId = context.userId
 
-    const user = userId ? await UserModel.getUser(userId) : []
+    const user = userId ? await UserModel.getUser(userId) : null
 
-    if (user.length === 0) { // Create user with token
+    if (user == null) { // Create user with token
       const newUser = await UserModel.newUser(token)
       userId = newUser.uuid
     } else { // Update user token
