@@ -5,9 +5,9 @@ const itemMutations = {
   newItem: async (_, args, context) => {
     const userId = context.userId;
     if (!userId)
-      throw AuthenticationError('You must be logged in to create an item.');
+      throw new AuthenticationError('You must be logged in to create an item.');
 
-    const { newItem } = args;    
+    const newItem = args;
 
     newItem.images_txt = newItem.images.join(',');
 
@@ -27,16 +27,16 @@ const itemMutations = {
   endItem: async (_, args, context) => {
     const userId = context.userId;
     if (!userId)
-      throw AuthenticationError('You must be logged in to end an item.');
+      throw new AuthenticationError('You must be logged in to end an item.');
 
     const { itemId } = args;
     const item = await ItemsModel.getItem(itemId);
 
     if (item.length == 0)
-      throw UserInputError('Item not found.');
+      throw new UserInputError('Item not found.');
 
     if (item[0].author != userId)
-      throw AuthenticationError('You are not the author of this item.');
+      throw new AuthenticationError('You are not the author of this item.');
 
     const endedItem = await ItemsModel.setResolved(itemId);
 

@@ -19,6 +19,7 @@ const env = {
 // Postgres connection string
 const db = {
   connectionUrl: process.env.PG_CONNECTION_STRING,
+  ca: process.env.PG_CA
 }
 
 export { port, env, secret, JWTSecret, db, version }

@@ -10,10 +10,7 @@ describe('[Environment]', () => {
   })
 
   test('Database', () => {
-    expect(db.host).not.toEqual('')
-    expect(db.port).not.toEqual('')
-    expect(db.name).not.toEqual('')
-    expect(db.user).not.toEqual('')
+    expect(db.connectionUrl).not.toEqual('')
   })
 
   test('api', () => {

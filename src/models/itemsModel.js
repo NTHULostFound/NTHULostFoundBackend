@@ -6,7 +6,7 @@ import pg from '../database'
 export default class ItemsModel {
 
   static async getItems(pagingArgs, itemType, showResolved = false, authorId = null, searchList = null) {
-    const { first, last, after, before } = args;
+    const { first, last, after, before } = pagingArgs;
 
     try {
 
@@ -14,7 +14,7 @@ export default class ItemsModel {
       let hasNextPage;
       let hasPreviousPage;
 
-      const builder = knex("items").select("*")
+      const builder = pg("items").select("*")
 
       if (itemType)
         builder.where('type', itemType)
@@ -46,7 +46,7 @@ export default class ItemsModel {
         items = hasNextPage ? data.slice(0, -1) : data;
       } else if (first && after) {
         const data = await builder
-          .where('createdAt', '<', decodeCursor(after))
+          .where('createdAt', '<', ItemsModel.decodeCursor(after))
           .orderBy("createdAt", "DESC")
           .limit(first + 1);
 
@@ -67,7 +67,7 @@ export default class ItemsModel {
         items = hasPreviousPage ? data.slice(1) : data;
       } else if (last && before) {
         const subQuery = builder
-          .where('createdAt', '>', decodeCursor(before))
+          .where('createdAt', '>', ItemsModel.decodeCursor(before))
           .orderBy('createdAt', 'ASC')
           .limit(last + 1);
 
@@ -96,10 +96,7 @@ export default class ItemsModel {
 
   static async getItem(itemId) {
     try {
-      const queryText = 'SELECT * FROM items WHERE uuid = $1'
-      const itemRes = await pool.query(queryText, [itemId])
-      
-      const res = await knex('items').select('*').where('uuid', itemId).first()
+      const res = await pg('items').select('*').where('uuid', itemId).first()
       return res
 
     } catch (e) {
@@ -111,7 +108,7 @@ export default class ItemsModel {
   static async newItem(item, authorId) {
     try {
 
-      const res = await knex('items').insert({
+      const res = await pg('items').insert({
         author: authorId,
         type: item.type,
         name: item.name,
@@ -121,9 +118,9 @@ export default class ItemsModel {
         how: item.how,
         contact: item.contact,
         images: item.images_txt
-      }).returning('*').first()
+      }).returning('*');
 
-      return res
+      return res[0]
 
     } catch (e) {
       console.warn(e)
@@ -133,11 +130,11 @@ export default class ItemsModel {
 
   static async setResolved(itemId) {
     try {
-      const res = await knex('items').update({
+      const res = await pg('items').update({
         resolved: true
-      }).where('uuid', itemId).returning('*').first()
+      }).where('uuid', itemId).returning('*');
 
-      return res
+      return res[0]
 
     } catch (e) {
       console.warn(e)
@@ -151,6 +148,6 @@ export default class ItemsModel {
   }
 
   static encodeCursor(createdAt) {
-    return Buffer.from(createdAt).toString('base64');
+    return Buffer.from(createdAt.toISOString()).toString('base64');
   }
 }

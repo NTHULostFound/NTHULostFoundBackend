@@ -1,5 +1,5 @@
 import { UserInputError } from 'apollo-server-express';
-import { JWTSecret } from '../config/environment'
+import { JWTSecret } from '../../config/environment'
 const jwt = require('jsonwebtoken');
 
 const getUserFromToken = (token) => {

@@ -1,13 +1,15 @@
+import { itemMutations, itemQueries } from './items'
+import { userMutations } from './user'
 import { versionQueries } from './version'
-import { authorQueries, authorMutations } from './author'
 
 const resolvers = {
   Query: {
     ...versionQueries,
-    ...authorQueries
+    ...itemQueries
   },
   Mutation: {
-    ...authorMutations
+    ...itemMutations,
+    ...userMutations
   }
 }
 

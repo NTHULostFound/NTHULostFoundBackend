@@ -1,4 +1,6 @@
 
+scalar Date
+
 type Query {
   # Version
   version: String!
@@ -9,7 +11,8 @@ type Query {
 }
 
 type Mutation {
-  newItem(item: NewItem): Item!
+  newItem(type: ItemType!, name: String!, description: String, date: String!,
+            place: String!, how: String!, images: [String!]!, contact: String!, who: String): Item!
   endItem(itemId: String!): Item!
 
   registerFCMToken(token: String!): AccessToken!

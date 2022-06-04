@@ -9,7 +9,7 @@ type Item {
   type: ItemType!
   name: String!
   description: String
-  date: String!
+  date: Date!
   place: String!
   how: String!
   images: [String!]!

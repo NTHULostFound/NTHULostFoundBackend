@@ -1,8 +1,13 @@
 import { db } from '../config/environment'
 
 const pg = require('knex')({
-  client: 'pg',
-  connection: db.connectionUrl
+  client: 'postgresql',
+  connection: { 
+    connectionString: db.connectionUrl,
+    ssl: {
+      ca: db.ca
+    }
+  },
 });
 
 export default pg
