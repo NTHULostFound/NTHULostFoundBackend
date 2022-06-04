@@ -9,7 +9,7 @@ const getUserFromToken = (token) => {
     const decoded = jwt.verify(token, JWTSecret)
     return decoded.userId
   } catch (err) {
-    throw UserInputError('Bad authentication token')
+    throw new UserInputError('Bad authentication token')
   }
 }
 

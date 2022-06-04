@@ -83,7 +83,7 @@ export default class ItemsModel {
       }
     } catch (e) {
       console.warn(e)
-      throw Error('Internal Server Error')
+      throw new Error('Internal Server Error')
     }
   }
 

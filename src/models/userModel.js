@@ -9,7 +9,7 @@ export default class UserModel {
       return res
     } catch (e) {
       console.warn(e)
-      throw Error('Internal Server Error')
+      throw new Error('Internal Server Error')
     }
   }
 
@@ -20,7 +20,7 @@ export default class UserModel {
       return res
     } catch (e) {
       console.warn(e)
-      throw Error('Internal Server Error')
+      throw new Error('Internal Server Error')
     }
   }
 
@@ -33,7 +33,7 @@ export default class UserModel {
       return res[0]
     } catch (e) {
       console.warn(e)
-      throw Error('Internal Server Error')
+      throw new Error('Internal Server Error')
     }
   }
 
@@ -50,7 +50,7 @@ export default class UserModel {
       return res[0]
     } catch (e) {
       console.warn(e)
-      throw Error('Internal Server Error')
+      throw new Error('Internal Server Error')
     }
   }
 }
