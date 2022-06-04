@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: graphql-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+     - http:
+        paths:
+          - path: /graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: graphql-sv
+                port:
+                  number: 3000
+    
+  tls:
+   - secretName: k3s-tls-cert
+

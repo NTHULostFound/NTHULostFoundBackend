@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql
+  labels:
+    app: graphql
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: graphql
+  template:
+    metadata:
+      labels:
+        app: graphql
+    spec:
+      containers:
+      - name: graphql
+        image: yiprograms/team16-nthu-lost-found-backend:0.0.2
+        envFrom:
+          - configMapRef:
+              name: graphql-config
+          - secretRef:
+              name: graphql-secret
+        env:
+          - name: PG_URI
+            valueFrom: { secretKeyRef: { name: nthulostfound-pguser-nthulostfound, key: uri } }
+          - name: PG_CONNECTION_STRING
+            value: "$(PG_URI)?ssl=true"
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"
