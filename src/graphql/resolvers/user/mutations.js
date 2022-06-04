@@ -11,7 +11,7 @@ const userMutations = {
 
     if (user.length === 0) { // Create user with token
       const newUser = await UserModel.newUser(token)
-      userId = newUser[0].uuid
+      userId = newUser.uuid
     } else { // Update user token
       user.fcmToken = token
       await UserModel.updateUser(user)
