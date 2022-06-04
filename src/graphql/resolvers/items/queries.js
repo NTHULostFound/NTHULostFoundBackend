@@ -1,5 +1,3 @@
-import AuthorModel from '../../../models/authorModel'
-import connectPool from '../../../database'
 import { UserInputError } from 'apollo-server-express';
 import ItemsModel from '../../../models/itemsModel';
 
@@ -80,4 +78,4 @@ const itemQueries = {
   }
 }
 
-export default authorQueries
+export default itemQueries

@@ -51,4 +51,4 @@ const itemMutations = {
   }
 }
 
-export default authorMutations
+export default itemMutations
