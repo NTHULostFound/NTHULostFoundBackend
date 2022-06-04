@@ -4,6 +4,7 @@ metadata:
   name: graphql-ingress
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/issuer: letsencrypt
 spec:
   rules:
      - http:
@@ -17,5 +18,7 @@ spec:
                   number: 3000
     
   tls:
-   - secretName: k3s-tls-cert
+    - secretName: nthu-lost-found-tls
+      hosts:
+        - nthu-lost-found.yikuo.dev
 
