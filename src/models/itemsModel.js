@@ -5,7 +5,7 @@ import pg from '../database'
 /* eslint-disable no-unused-vars */
 export default class ItemsModel {
 
-  static async getItems(pagingArgs, showResolved = false, authorId = null, search = null) {
+  static async getItems(pagingArgs, showResolved = false, authorId = null, searchList = null) {
     const { first, last, after, before } = args;
 
     try {
@@ -31,11 +31,15 @@ export default class ItemsModel {
       if (authorId)
         builder.where("author", authorId)      
 
-      if (search)
+      if (searchList)
         builder.where((bd) => {
-          bd.orWhereRaw("?? ILIKE '%' || ? || '%'", ['name', search])
-            .orWhereRaw("?? ILIKE '%' || ? || '%'", ['description', search])
-            .orWhereRaw("?? ILIKE '%' || ? || '%'", ['place', search])
+          let res = bd;
+          for (const search of searchList) {
+            res = res.orWhereRaw("?? ILIKE '%' || ? || '%'", ['name', search])
+              .orWhereRaw("?? ILIKE '%' || ? || '%'", ['description', search])
+              .orWhereRaw("?? ILIKE '%' || ? || '%'", ['place', search])
+          }
+          return res
         });
       
       if (first && !after && !before) {
@@ -110,10 +114,11 @@ export default class ItemsModel {
     }
   }
 
-  static async newItem(item) {
+  static async newItem(item, authorId) {
     try {
 
       const res = knex('items').insert({
+        author: authorId,
         type: item.type,
         name: item.name,
         description: item.description,
