@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "start": "babel-node ./index.js",
     "dev": "nodemon ./index.js --exec babel-node",
     "test": "standard --fix && jest --force-exit --detectOpenHandles -u",
     "cover": "jest --coverage --watchAll=false --force-exit -u",
