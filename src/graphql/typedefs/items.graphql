@@ -17,6 +17,21 @@ type Item {
   resolved: Boolean!
 }
 
+type ItemsConnection {
+  edges: [ItemEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ItemEdge {
+  node: Item!
+  cursor: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
 type NewItem {
   type: ItemType!
   name: String!
