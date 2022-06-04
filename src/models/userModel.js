@@ -1,61 +1,56 @@
-import knex from 'knex'
 import pg from '../database'
 
 /* eslint-disable no-unused-vars */
 export default class UserModel {
-
-  static async getUser(userId) {
+  static async getUser (userId) {
     try {
-      const res = await pg("users").where("uuid", userId).first()
-      
+      const res = await pg('users').where('uuid', userId).first()
+
       return res
     } catch (e) {
       console.warn(e)
-      throw Error("Internal Server Error")
+      throw Error('Internal Server Error')
     }
   }
 
-  static async findUser(who) {
+  static async findUser (who) {
     try {
-      const res = await pg("users").whereILike("studentId", who).orWhereILike("name", who)
+      const res = await pg('users').whereILike('studentId', who).orWhereILike('name', who)
 
       return res
-
     } catch (e) {
       console.warn(e)
-      throw Error("Internal Server Error")
+      throw Error('Internal Server Error')
     }
   }
 
-  static async newUser(fcmToken) {
+  static async newUser (fcmToken) {
     try {
-      const res = await pg("users").insert({
-        fcmToken: fcmToken,
-      }).returning("*");
+      const res = await pg('users').insert({
+        fcmToken: fcmToken
+      }).returning('*')
 
       return res[0]
-
     } catch (e) {
       console.warn(e)
-      throw Error("Internal Server Error")
+      throw Error('Internal Server Error')
     }
   }
 
-  static async updateUser(user) {
+  static async updateUser (user) {
     try {
-      const res = await pg("users").update({
+      const res = await pg('users').update({
         fcmToken: user.fcmToken,
         name: user.name,
         studentId: user.studentId,
-        email: user.email,
-      }).where("uuid", user.uuid)
-        .returning("*");
+        email: user.email
+      }).where('uuid', user.uuid)
+        .returning('*')
 
       return res[0]
-
     } catch (e) {
       console.warn(e)
-      throw Error("Internal Server Error")
+      throw Error('Internal Server Error')
     }
   }
 }

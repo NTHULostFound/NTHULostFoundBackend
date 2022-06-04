@@ -1,51 +1,47 @@
-import { AuthenticationError, UserInputError } from 'apollo-server-express';
+import { AuthenticationError, UserInputError } from 'apollo-server-express'
 import ItemsModel from '../../../models/itemsModel'
 
 const itemMutations = {
   newItem: async (_, args, context) => {
-    const userId = context.userId;
-    if (!userId)
-      throw new AuthenticationError('You must be logged in to create an item.');
+    const userId = context.userId
+    if (!userId) { throw new AuthenticationError('You must be logged in to create an item.') }
 
-    const newItem = args;
+    const newItem = args
 
-    newItem.images_txt = newItem.images.join(',');
+    newItem.images_txt = newItem.images.join(',')
 
-    const item = await ItemsModel.newItem(newItem, userId);
+    const item = await ItemsModel.newItem(newItem, userId)
 
-    item.isMine = item.author == userId;
-    item.images = item.images == ''? []: item.images.split(',');
+    item.isMine = item.author === userId
+    item.images = item.images === '' ? [] : item.images.split(',')
 
-    delete item.author;
-    delete item.contact;
-    delete item.createdAt;
+    delete item.author
+    delete item.contact
+    delete item.createdAt
 
     // TODO: Send notification
 
     return item
   },
   endItem: async (_, args, context) => {
-    const userId = context.userId;
-    if (!userId)
-      throw new AuthenticationError('You must be logged in to end an item.');
+    const userId = context.userId
+    if (!userId) { throw new AuthenticationError('You must be logged in to end an item.') }
 
-    const { itemId } = args;
-    const item = await ItemsModel.getItem(itemId);
+    const { itemId } = args
+    const item = await ItemsModel.getItem(itemId)
 
-    if (item.length == 0)
-      throw new UserInputError('Item not found.');
+    if (item.length === 0) { throw new UserInputError('Item not found.') }
 
-    if (item[0].author != userId)
-      throw new AuthenticationError('You are not the author of this item.');
+    if (item.author !== userId) { throw new AuthenticationError('You are not the author of this item.') }
 
-    const endedItem = await ItemsModel.setResolved(itemId);
+    const endedItem = await ItemsModel.setResolved(itemId)
 
-    endedItem.isMine = item.author == userId;
-    item.images = item.images == ''? []: item.images.split(',');
+    endedItem.isMine = item.author === userId
+    item.images = item.images === '' ? [] : item.images.split(',')
 
-    delete endedItem.author;
-    delete endedItem.contact;
-    delete endedItem.createdAt;
+    delete endedItem.author
+    delete endedItem.contact
+    delete endedItem.createdAt
 
     return endedItem
   }

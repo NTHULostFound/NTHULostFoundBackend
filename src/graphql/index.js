@@ -10,13 +10,16 @@ const apolloServer = new ApolloServer({
   playground: env.development,
   context: ({ req }) => {
     // Get the user token from the headers.
-    const token = req.headers.authorization || null;
- 
+
+    const token = (req == null || req.header == null)
+      ? null
+      : req.headers.authorization || null
+
     // Try to retrieve a user with the token
-    const userId = getUserFromToken(token);
- 
+    const userId = getUserFromToken(token)
+
     // Add the user to the context
-    return { userId };
+    return { userId }
   },
   resolvers: {
     Date: dateScalar

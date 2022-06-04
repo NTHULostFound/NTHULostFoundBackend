@@ -1,4 +1,4 @@
-import { port, env, secret, JWTSecret, db, version, api } from '../config/environment'
+import { port, env, secret, JWTSecret, db, version } from '../config/environment'
 
 describe('[Environment]', () => {
   test('Apollo Server', () => {
@@ -11,10 +11,5 @@ describe('[Environment]', () => {
 
   test('Database', () => {
     expect(db.connectionUrl).not.toEqual('')
-  })
-
-  test('api', () => {
-    expect(api.host).not.toEqual('')
-    expect(api.key).not.toEqual('')
   })
 })

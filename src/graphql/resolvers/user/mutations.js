@@ -1,20 +1,20 @@
-import { AuthenticationError } from 'apollo-server-express';
-import UserModel from '../../../models/userModel';
-import { createToken } from '../../utils/auth';
+import { AuthenticationError } from 'apollo-server-express'
+import UserModel from '../../../models/userModel'
+import { createToken } from '../../utils/auth'
 
 const userMutations = {
   registerFCMToken: async (_, args, context) => {
-    const { token } = args;
-    let userId = context.userId;
+    const { token } = args
+    let userId = context.userId
 
-    const user = userId? await UserModel.getUser(userId): [];
+    const user = userId ? await UserModel.getUser(userId) : []
 
-    if (user.length == 0) { // Create user with token
-      const newUser = await UserModel.newUser(token);
-      userId = newUser[0].uuid;
+    if (user.length === 0) { // Create user with token
+      const newUser = await UserModel.newUser(token)
+      userId = newUser[0].uuid
     } else { // Update user token
-      user.fcmToken = token;
-      await UserModel.updateUser(user);
+      user.fcmToken = token
+      await UserModel.updateUser(user)
     }
 
     const accessToken = {
@@ -24,30 +24,25 @@ const userMutations = {
     return accessToken
   },
   updateUserData: async (_, args, context) => {
-    const { name, studentId, email } = args;
-    const userId = context.userId;
+    const { name, studentId, email } = args
+    const userId = context.userId
 
-    if (userId == null)
-      throw new AuthenticationError('You must be logged in to update your data.');
+    if (userId == null) { throw new AuthenticationError('You must be logged in to update your data.') }
 
-    const user = await UserModel.getUser(userId);
+    const user = await UserModel.getUser(userId)
 
-    if (user == null)
-      throw new AuthenticationError('User not found.');
+    if (user == null) { throw new AuthenticationError('User not found.') }
 
-    if (name)
-      user.name = name;
+    if (name) { user.name = name }
 
-    if (studentId)
-      user.studentId = studentId;
+    if (studentId) { user.studentId = studentId }
 
-    if (email)
-      user.email = email;
+    if (email) { user.email = email }
 
-    const updatedUser = await UserModel.updateUser(user);
+    const updatedUser = await UserModel.updateUser(user)
 
-    delete updatedUser.uuid;
-    delete updatedUser.createdAt;
+    delete updatedUser.uuid
+    delete updatedUser.createdAt
 
     return updatedUser
   }
