@@ -18,7 +18,7 @@ const userMutations = {
     }
 
     const accessToken = {
-      token: createToken(userId)
+      accessToken: createToken(userId)
     }
 
     return accessToken

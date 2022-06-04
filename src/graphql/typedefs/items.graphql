@@ -32,23 +32,7 @@ type PageInfo {
   hasPreviousPage: Boolean!
 }
 
-type NewItem {
-  type: ItemType!
-  name: String!
-  description: String
-  date: String!
-  place: String!
-  how: String!
-  images: [String!]!
-  contact: String!
-  who: String
-}
-
-type DeletedItemResponse {
-  count: Int!
-}
-
 type ItemContact {
-    contact: String!
+  contact: String!
 }
 
