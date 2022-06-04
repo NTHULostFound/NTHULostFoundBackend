@@ -8,12 +8,6 @@ const secret = process.env.SECRET
 const JWTSecret = process.env.JWT_SECRET
 const version = process.env.VERSION
 
-// Weathermap API
-const api = {
-  host: process.env.API_HOST,
-  key: process.env.API_KEY
-}
-
 // Different situations
 const env = {
   development: process.env.NODE_ENV === 'development',
@@ -27,4 +21,4 @@ const db = {
   connectionUrl: process.env.PG_CONNECTION_STRING,
 }
 
-export { port, env, secret, db, version, api }
+export { port, env, secret, JWTSecret, db, version }
