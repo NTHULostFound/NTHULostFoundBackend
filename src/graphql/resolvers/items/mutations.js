@@ -20,6 +20,8 @@ const itemMutations = {
     delete item.contact;
     delete item.createdAt;
 
+    // TODO: Send notification
+
     return item
   },
   endItem: async (_, args, context) => {

@@ -2,9 +2,10 @@
 type Query {
   # Version
   version: String!
-  getItems(type: ItemType!, search: String, mine: Boolean): ItemsConnection!
-  getItem(itemId: String!): Item!
-  getItemContact(itemId: String!): ItemContact!
+  items(first: Int, last: Int, after: String, before: String,
+      type: ItemType!, search: String, mine: Boolean): ItemsConnection!
+  item(itemId: String!): Item!
+  itemContact(itemId: String!): ItemContact!
 }
 
 type Mutation {

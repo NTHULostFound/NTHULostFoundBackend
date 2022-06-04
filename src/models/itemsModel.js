@@ -5,25 +5,19 @@ import pg from '../database'
 /* eslint-disable no-unused-vars */
 export default class ItemsModel {
 
-  static async getItems(pagingArgs, showResolved = false, authorId = null, searchList = null) {
+  static async getItems(pagingArgs, itemType, showResolved = false, authorId = null, searchList = null) {
     const { first, last, after, before } = args;
 
     try {
-
-      if (!first && !last)
-        throw UserInputError("Paging arguments must have either 'first' or 'last'")
-
-      if (first && last)
-        throw UserInputError("Paging arguments should not have both 'first' and 'last'")
-
-      if (after && before)
-        throw UserInputError("Paging arguments should not have both 'after' and 'before'")
 
       let items;
       let hasNextPage;
       let hasPreviousPage;
 
       const builder = knex("items").select("*")
+
+      if (itemType)
+        builder.where('type', itemType)
 
       if (!showResolved)
         builder.where("resolved", false)
