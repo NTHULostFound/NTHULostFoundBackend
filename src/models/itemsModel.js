@@ -105,7 +105,7 @@ export default class ItemsModel {
       const queryText = 'SELECT * FROM items WHERE uuid = $1'
       const itemRes = await pool.query(queryText, [itemId])
       
-      const res = knex('items').select('*').where('uuid', itemId).first()
+      const res = await knex('items').select('*').where('uuid', itemId).first()
       return res
 
     } catch (e) {
@@ -117,7 +117,7 @@ export default class ItemsModel {
   static async newItem(item, authorId) {
     try {
 
-      const res = knex('items').insert({
+      const res = await knex('items').insert({
         author: authorId,
         type: item.type,
         name: item.name,
@@ -139,7 +139,7 @@ export default class ItemsModel {
 
   static async setResolved(itemId) {
     try {
-      const res = knex('items').update({
+      const res = await knex('items').update({
         resolved: true
       }).where('uuid', itemId).returning('*').first()
 
@@ -149,5 +149,14 @@ export default class ItemsModel {
       console.warn(e)
       throw Error("Internal Server Error")
     }
+  }
+
+
+  static decodeCursor(cursor) {
+    return Buffer.from(cursor, 'base64').toString('ascii');
+  }
+
+  static encodeCursor(createdAt) {
+    return Buffer.from(createdAt).toString('base64');
   }
 }

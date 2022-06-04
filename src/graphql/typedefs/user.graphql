@@ -7,5 +7,5 @@ type UserInfo {
 }
 
 type AccessToken {
-    token: String
+    token: String!
 }

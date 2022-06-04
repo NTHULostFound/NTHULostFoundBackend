@@ -6,7 +6,7 @@ export default class UserModel {
 
   static async getUser(userId) {
     try {
-      const res = await knex("users").where("uuid", userId)
+      const res = await knex("users").where("uuid", userId).first()
       
       return res
     } catch (e) {
@@ -31,7 +31,7 @@ export default class UserModel {
     try {
       const res = await knex("users").insert({
         fcmToken: fcmToken,
-      }).returning("*")
+      }).returning("*").first();
 
       return res
 
@@ -49,7 +49,7 @@ export default class UserModel {
         studentId: user.studentId,
         email: user.email,
       }).where("uuid", user.uuid)
-        .returning("*")
+        .returning("*").first();
 
       return res
 
