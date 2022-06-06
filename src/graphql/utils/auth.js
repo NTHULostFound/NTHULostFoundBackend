@@ -6,7 +6,12 @@ const getUserFromToken = (token) => {
   try {
     if (token == null) { return null }
 
-    const decoded = jwt.verify(token, JWTSecret)
+    if (!token.startsWith('Bearer '))
+      throw new UserInputError('Bad token type')
+
+    const tokenWithoutBearer = token.slice(7, token.length)
+
+    const decoded = jwt.verify(tokenWithoutBearer, JWTSecret)
     return decoded.userId
   } catch (err) {
     throw new UserInputError('Bad authentication token')
