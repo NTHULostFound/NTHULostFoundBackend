@@ -20,13 +20,11 @@ const itemMutations = {
     delete item.contact
     delete item.createdAt
 
-    // TODO: Send notification
-
     if(newItem.who !== undefined) {
-      await MessagingModel.sendLostNotification(newItem.who, item.name, item.uuid)
+      MessagingModel.sendLostNotification(newItem.who, item.name, item.uuid)
     }
 
-    await MessagingModel.sendInserted(userId, item.name, item.uuid, item.type)
+    MessagingModel.sendInserted(userId, item.name, item.uuid, item.type)
 
     return item
   },

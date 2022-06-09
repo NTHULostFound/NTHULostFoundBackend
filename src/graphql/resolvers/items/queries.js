@@ -64,8 +64,7 @@ const itemQueries = {
 
     if (item == null) { throw new UserInputError('Item not found.') }
 
-    // TODO: Send notification
-    await MessagingModel.sendContactChecked(item.author, item.name, item.uuid)
+    MessagingModel.sendContactChecked(item.author, item.name, item.uuid)
 
     const itemContact = {
       contact: item.contact
