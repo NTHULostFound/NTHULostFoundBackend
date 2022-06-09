@@ -1,5 +1,6 @@
 import { AuthenticationError, UserInputError } from 'apollo-server-express'
 import ItemsModel from '../../../models/itemsModel'
+import MessagingModel from '../../../models/messagingModel'
 
 const itemMutations = {
   newItem: async (_, args, context) => {
@@ -20,6 +21,12 @@ const itemMutations = {
     delete item.createdAt
 
     // TODO: Send notification
+
+    if(newItem.who !== undefined) {
+      await MessagingModel.sendLostNotification(newItem.who, item.name, item.uuid)
+    }
+
+    await MessagingModel.sendInserted(userId, item.name, item.uuid, item.type)
 
     return item
   },
