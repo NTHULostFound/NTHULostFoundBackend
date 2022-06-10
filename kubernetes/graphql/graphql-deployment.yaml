@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: graphql
-        image: yiprograms/team16-nthu-lost-found-backend:0.0.8
+        image: yiprograms/team16-nthu-lost-found-backend:0.0.9
         envFrom:
           - configMapRef:
               name: graphql-config
