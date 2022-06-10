@@ -20,7 +20,7 @@ const itemMutations = {
     delete item.contact
     delete item.createdAt
 
-    if(newItem.who !== undefined) {
+    if (newItem.who !== undefined) {
       MessagingModel.sendLostNotification(newItem.who, item.name, item.uuid)
     }
 

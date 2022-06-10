@@ -7,7 +7,16 @@ const port = process.env.PORT
 const secret = process.env.SECRET
 const JWTSecret = process.env.JWT_SECRET
 const version = process.env.VERSION
-const google_credential = process.env.GOOGLE_APPLICATION_CREDENTIALS
+const googleCredential = process.env.GOOGLE_APPLICATION_CREDENTIALS
+
+// Firebase Dynamic Links
+const dynamicLink = {
+  baseUri: process.env.DYNAMIC_LINK_BASE_URI,
+  domainPrefix: process.env.DYNAMIC_LINK_DOMAIN_PREFIX,
+  androidPackageName: process.env.DYNAMIC_LINK_ANDROID_PACKAGE_NAME,
+  fallbackUrl: process.env.DYNAMIC_LINK_FALLBACK_URL,
+  firebaseApiKey: process.env.FIREBASE_API_KEY
+}
 
 // Different situations
 const env = {
@@ -23,4 +32,4 @@ const db = {
   ca: process.env.PG_CA
 }
 
-export { port, env, secret, JWTSecret, db, version, google_credential }
+export { port, env, secret, JWTSecret, db, version, googleCredential, dynamicLink }

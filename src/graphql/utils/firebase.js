@@ -1,13 +1,13 @@
-import { google_credential } from '../../config/environment'
+import { googleCredential } from '../../config/environment'
 
-const admin = require("firebase-admin")
+const admin = require('firebase-admin')
 
-function getMessaging() {
-  let credential = require(google_credential);
+function getMessaging () {
+  const credential = require(googleCredential)
   admin.initializeApp({
     credential: admin.credential.cert(credential)
   })
-  let messaging = admin.messaging()
+  const messaging = admin.messaging()
   return messaging
 }
 

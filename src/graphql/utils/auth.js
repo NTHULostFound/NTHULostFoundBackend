@@ -6,8 +6,7 @@ const getUserFromToken = (token) => {
   try {
     if (token == null) { return null }
 
-    if (!token.startsWith('Bearer '))
-      throw new UserInputError('Bad token type')
+    if (!token.startsWith('Bearer ')) { throw new UserInputError('Bad token type') }
 
     const tokenWithoutBearer = token.slice(7, token.length)
 

@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS items (
     "contact" TEXT NOT NULL,
     "images" TEXT NOT NULL,
     "resolved" BOOLEAN NOT NULL DEFAULT FALSE,
+    "dynamicLink" TEXT NOT NULL DEFAULT 'https://nthulostfound.page.link/item',
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 

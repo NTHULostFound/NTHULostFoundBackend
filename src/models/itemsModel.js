@@ -1,4 +1,6 @@
+import { dynamicLink } from '../config/environment'
 import pg from '../database'
+const axios = require('axios')
 
 /* eslint-disable no-unused-vars */
 export default class ItemsModel {
@@ -111,7 +113,13 @@ export default class ItemsModel {
         images: item.images_txt
       }).returning('*')
 
-      return res[0]
+      const link = await this.generateDynamicLink(res[0])
+
+      const resWithLink = await pg('items').update({
+        dynamicLink: link
+      }).where('uuid', res[0].uuid).returning('*')
+
+      return resWithLink[0]
     } catch (e) {
       console.warn(e)
       throw Error('Internal Server Error')
@@ -137,5 +145,55 @@ export default class ItemsModel {
 
   static encodeCursor (createdAt) {
     return Buffer.from(createdAt.toISOString()).toString('base64')
+  }
+
+  static async generateDynamicLink (item) {
+    try {
+      const message =
+            item.type === 'LOST'
+              ? `喔不，我的${item.name}不見了 QQ，有人可以幫我找嗎？\n` +
+              '立刻下載「清大遺失物平台」，查看更多資訊！'
+              : `我在${item.place}撿到了${item.name}！有人遺失了${item.name}嗎？\n` +
+              '立刻下載「清大遺失物平台」來查看更多資訊吧！'
+
+      const data = {
+        dynamicLinkInfo: {
+          domainUriPrefix: dynamicLink.domainPrefix,
+          link: `${dynamicLink.baseUri}/?id=${item.uuid}`,
+          androidInfo: {
+            androidPackageName: dynamicLink.androidPackageName
+          },
+          socialMetaTagInfo: {
+            socialTitle: item.name,
+            socialDescription: message,
+            socialImageLink: item.images.length > 0 ? item.images[0] : null
+          }
+        },
+        suffix: {
+          option: 'SHORT'
+        }
+      }
+
+      const options = {
+        hostname: 'https://firebasedynamiclinks.googleapis.com',
+        port: 443,
+        path: `/v1/shortLinks?key=${dynamicLink.firebaseApiKey}`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': data.length
+        }
+      }
+
+      const res = await axios.post(
+            `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${dynamicLink.firebaseApiKey}`,
+            data
+      )
+
+      return res.data.shortLink
+    } catch (e) {
+      console.warn(e)
+      throw Error('Internal Server Error')
+    }
   }
 }

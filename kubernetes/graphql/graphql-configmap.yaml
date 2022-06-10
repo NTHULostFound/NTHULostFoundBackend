@@ -10,3 +10,7 @@ data:
   PORT: "3000"
   NODE_TLS_REJECT_UNAUTHORIZED: "0"
   GOOGLE_APPLICATION_CREDENTIALS: "/app/google-secret/service-account-file.json"
+  DYNAMIC_LINK_BASE_URI: https://nthulostfound.page.link/item
+  DYNAMIC_LINK_DOMAIN_PREFIX: https://nthulostfound.page.link
+  DYNAMIC_LINK_ANDROID_PACKAGE_NAME: ss.team16.nthulostfound
+  DYNAMIC_LINK_FALLBACK_URL: https://play.google.com/store/apps/details?id=ss.team16.nthulostfound
