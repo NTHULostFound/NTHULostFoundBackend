@@ -113,13 +113,13 @@ export default class ItemsModel {
         images: item.images_txt
       }).returning('*')
 
-      const link = await this.generateDynamicLink(res[0])
+      this.generateDynamicLink(res[0]).then(link =>
+        pg('items').update({
+          dynamicLink: link
+        }).where('uuid', res[0].uuid)
+      )
 
-      const resWithLink = await pg('items').update({
-        dynamicLink: link
-      }).where('uuid', res[0].uuid).returning('*')
-
-      return resWithLink[0]
+      return res[0]
     } catch (e) {
       console.warn(e)
       throw Error('Internal Server Error')
@@ -156,32 +156,23 @@ export default class ItemsModel {
               : `我在${item.place}撿到了${item.name}！有人遺失了${item.name}嗎？\n` +
               '立刻下載「清大遺失物平台」來查看更多資訊吧！'
 
+      const linkTarget = `${dynamicLink.baseUri}/?id=${item.uuid}`
+
+      const longLink = `${dynamicLink.domainPrefix}/?link=${encodeURI(linkTarget)}` +
+        `&apn=${dynamicLink.androidPackageName}` +
+        `&ofl=${encodeURI(dynamicLink.fallbackUrl)}` +
+        `&st=${encodeURI(item.name)}` +
+        `&sd=${encodeURI(message)}` + (
+          item.images !== ''
+            ? `&si=${encodeURI(item.images.split(',')[0])}`
+            : '')
+
+      console.log(longLink)
+
       const data = {
-        dynamicLinkInfo: {
-          domainUriPrefix: dynamicLink.domainPrefix,
-          link: `${dynamicLink.baseUri}/?id=${item.uuid}`,
-          androidInfo: {
-            androidPackageName: dynamicLink.androidPackageName
-          },
-          socialMetaTagInfo: {
-            socialTitle: item.name,
-            socialDescription: message,
-            socialImageLink: item.images.length > 0 ? item.images[0] : null
-          }
-        },
+        longDynamicLink: longLink,
         suffix: {
           option: 'SHORT'
-        }
-      }
-
-      const options = {
-        hostname: 'https://firebasedynamiclinks.googleapis.com',
-        port: 443,
-        path: `/v1/shortLinks?key=${dynamicLink.firebaseApiKey}`,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': data.length
         }
       }
 

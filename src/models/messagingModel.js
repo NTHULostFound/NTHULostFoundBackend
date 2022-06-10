@@ -25,8 +25,7 @@ export default class MessagingModel {
     const possibleOwners = await UserModel.findUser(who)
     const fcmTokens = possibleOwners.map(result => result.fcmToken)
     console.log(fcmTokens)
-    if (fcmTokens.length === 0)
-      return
+    if (fcmTokens.length === 0) { return }
 
     const message = {
       tokens: fcmTokens,

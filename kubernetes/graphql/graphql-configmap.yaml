@@ -6,7 +6,7 @@ metadata:
     app: graphql
 data:
   VERSION: 1.0.0
-  NODE_ENV: production
+  NODE_ENV: development
   PORT: "3000"
   NODE_TLS_REJECT_UNAUTHORIZED: "0"
   GOOGLE_APPLICATION_CREDENTIALS: "/app/google-secret/service-account-file.json"
