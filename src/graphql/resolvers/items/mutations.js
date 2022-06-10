@@ -21,7 +21,7 @@ const itemMutations = {
     delete item.createdAt
 
     if (newItem.who !== undefined) {
-      MessagingModel.sendLostNotification(newItem.who, item.name, item.uuid)
+      MessagingModel.sendLost(newItem.who, item)
     }
 
     MessagingModel.sendInserted(userId, item.name, item.uuid, item.type)

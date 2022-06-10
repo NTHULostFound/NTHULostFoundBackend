@@ -18,6 +18,14 @@ const dynamicLink = {
   firebaseApiKey: process.env.FIREBASE_API_KEY
 }
 
+const email = {
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  user: process.env.EMAIL_USER,
+  pass: process.env.EMAIL_PASS,
+  from: process.env.EMAIL_FROM
+}
+
 // Different situations
 const env = {
   development: process.env.NODE_ENV === 'development',
@@ -32,4 +40,4 @@ const db = {
   ca: process.env.PG_CA
 }
 
-export { port, env, secret, JWTSecret, db, version, googleCredential, dynamicLink }
+export { port, env, secret, JWTSecret, db, version, googleCredential, dynamicLink, email }

@@ -113,13 +113,13 @@ export default class ItemsModel {
         images: item.images_txt
       }).returning('*')
 
-      this.generateDynamicLink(res[0]).then(link =>
-        pg('items').update({
-          dynamicLink: link
-        }).where('uuid', res[0].uuid)
-      )
+      const link = await this.generateDynamicLink(res[0])
 
-      return res[0]
+      const resWithLink = await pg('items').update({
+        dynamicLink: link
+      }).where('uuid', res[0].uuid).returning('*')
+
+      return resWithLink[0]
     } catch (e) {
       console.warn(e)
       throw Error('Internal Server Error')
@@ -166,8 +166,6 @@ export default class ItemsModel {
           item.images !== ''
             ? `&si=${encodeURI(item.images.split(',')[0])}`
             : '')
-
-      console.log(longLink)
 
       const data = {
         longDynamicLink: longLink,
