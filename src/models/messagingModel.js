@@ -116,7 +116,7 @@ export default class MessagingModel {
       emails.forEach(address => {
         try {
           transporter.sendMail({
-            from: email.from,
+            from: `Lost & Found in NTHU ${email.from}`,
             to: address,
             subject: `您遺失了「${itemName}」嗎？`,
             html: html
