@@ -49,6 +49,28 @@ const itemMutations = {
     delete endedItem.createdAt
 
     return endedItem
+  },
+  deleteItem: async (_, args, context) => {
+    const userId = context.userId
+    if (!userId) { throw new AuthenticationError('You must be logged in to delete an item.') }
+
+    const { itemId } = args
+    const item = await ItemsModel.getItem(itemId)
+
+    if (item == null) { throw new UserInputError('Item not found.') }
+
+    if (item.author !== userId) { throw new AuthenticationError('You are not the author of this item.') }
+
+    const deletedItem = await ItemsModel.deleteItem(itemId)
+
+    deletedItem.isMine = deletedItem.author === userId
+    deletedItem.images = deletedItem.images === '' ? [] : deletedItem.images.split(',')
+
+    delete deletedItem.author
+    delete deletedItem.contact
+    delete deletedItem.createdAt
+
+    return deletedItem
   }
 }
 

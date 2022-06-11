@@ -139,6 +139,20 @@ export default class ItemsModel {
     }
   }
 
+  static async deleteItem (itemId) {
+    try {
+      const res = await pg('items')
+        .where('uuid', itemId)
+        .del()
+        .returning('*')
+
+      return res[0]
+    } catch (e) {
+      console.warn(e)
+      throw Error('Internal Server Error')
+    }
+  }
+
   static decodeCursor (cursor) {
     return Buffer.from(cursor, 'base64').toString('ascii')
   }
