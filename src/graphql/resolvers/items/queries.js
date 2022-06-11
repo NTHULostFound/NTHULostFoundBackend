@@ -16,7 +16,7 @@ const itemQueries = {
     const filterAuthor = mine ? userId : null
     const searchList = search ? search.split(' ') : null
 
-    const items = await ItemsModel.getItems({ first, last, after, before }, type, false, filterAuthor, searchList)
+    const items = await ItemsModel.getItems({ first, last, after, before }, type, mine, filterAuthor, searchList)
 
     const itemsConnection = {
       edges: items.edges.map(item => {
