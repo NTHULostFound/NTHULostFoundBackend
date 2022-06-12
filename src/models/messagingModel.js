@@ -76,6 +76,9 @@ export default class MessagingModel {
   }
 
   static async sendLostEmail (emails, itemName, itemDescription, image, dynamicLink) {
+    emails = emails.filter(x => x !== null)
+    emails = [...new Set(emails)]
+
     if (emails.length === 0) { return }
 
     try {
@@ -114,16 +117,20 @@ export default class MessagingModel {
       })
 
       emails.forEach(address => {
-        try {
-          transporter.sendMail({
-            from: `Lost & Found in NTHU ${email.from}`,
-            to: address,
-            subject: `您遺失了「${itemName}」嗎？`,
-            html: html
-          })
-        } catch (e) {
+        transporter.sendMail({
+          from: `Lost & Found in NTHU ${email.from}`,
+          to: address,
+          subject: `您遺失了「${itemName}」嗎？`,
+          html: html
+        }).catch(e => {
           console.warn(e)
-        }
+        }).then(info => {
+          if (info == null) {
+            console.warn(`Email not sent to ${address}`)
+            return
+          }
+          console.log(`Email sent to ${address}, ${info.response}`)
+        })
       })
     } catch (e) {
       console.warn(e)
